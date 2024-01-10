@@ -4,10 +4,31 @@ const bodyParser = require('body-parser'); // Middleware para procesar JSON en l
 const ProductManager = require('./ProductManager');
 const productRouter = require('./Routes/productRouter'); 
 const cartRouter = require('./Routes/cartRouter'); 
+const exphbs = require('express-handlebars');
+const http = require('http');
+const socketIO = require('socket.io');
+const path = require('path');
+
 
 
 const app = express();
 const port = 8080;
+const server = http.createServer(app);
+const io = socketIO(server);
+
+app.engine('handlebars', exphbs.engine({
+    defaultLayout: false // Desactiva el uso de layouts por defecto
+}));
+app.set('view engine', 'handlebars');
+app.set('views', path.join(__dirname, 'views'));
+
+
+io.on('connection', (socket) => {
+    console.log('Usuario conectado');
+    
+    // Manejar eventos de WebSocket aquí
+});
+
 
 // Middleware para procesar JSON en las solicitudes
 app.use(bodyParser.json());
@@ -59,8 +80,12 @@ app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 
 app.get('/', (req, res) => {
-    res.send('HOLA');
+    const productManager = new ProductManager("products.json");
+    const products = productManager.getProducts();
+    res.render('home', { products });
 });
+
+
 
 app.get('/products', (req, res) => {
 
