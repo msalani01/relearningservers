@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Lista de Productos</title>
+</head>
+<body>
+
+
+<!-- Agrega el formulario para crear y eliminar productos -->
+<form id="productForm">
+    <label for="productName">Nombre del Producto:</label>
+    <input type="text" id="productName" name="productName" required>
+    <button type="submit">Crear Producto</button>
+</form>
+
+
+
+
+
+<!-- Lista de productos -->
+<ul id="realTimeProductsList">
+    <!-- La lista de productos se llenará dinámicamente a través de websockets -->
+</ul>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    // Maneja el evento de actualización de productos
+    socket.on('updateProducts', function (products) {
+        const realTimeProductsList = document.getElementById('realTimeProductsList');
+        realTimeProductsList.innerHTML = ''; // Limpia la lista antes de actualizar
+
+        products.forEach(function (product) {
+            const listItem = document.createElement('li');
+            listItem.textContent = product.title + ' - ' + product.price;
+            realTimeProductsList.appendChild(listItem);
+        });
+    });
+
+    // Maneja el envío del formulario a través de websockets
+    const productForm = document.getElementById('productForm');
+    productForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const productName = document.getElementById('productName').value;
+
+        // Envia la información del formulario al servidor a través de websockets
+        socket.emit('createProduct', { title: productName });
+    });
+</script>
+
+
+</body>
+</html>

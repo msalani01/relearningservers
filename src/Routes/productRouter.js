@@ -30,8 +30,13 @@ productsRouter.post('/', (req, res) => {
         thumbnails: thumbnails || [], // Si no se proporciona thumbnails, se establece como un array vacío
     };
 
+    const socketServer = req.app.get('socketServer');
+
     // Agrega el nuevo producto al ProductManager
     const addedProduct = productManager.addProduct(newProduct);
+
+    socketServer.io.emit('updateProducts', productManager.getProducts());
+
 
     // Devuelve el producto recién agregado
     if (addedProduct) {

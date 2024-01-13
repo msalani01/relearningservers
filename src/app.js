@@ -29,12 +29,22 @@ io.on('connection', (socket) => {
     // Manejar eventos de WebSocket aquí
 });
 
+// Después de agregar o eliminar un producto
+io.emit('updateProducts', getProductList());
+
+
 
 // Middleware para procesar JSON en las solicitudes
 app.use(bodyParser.json());
 
 // Crea una instancia única de ProductManager al inicio de la aplicación
 const productManager = new ProductManager("products.json");
+
+const socketServer = { io };
+
+app.set('socketServer', socketServer);
+
+module.exports = { socketServer };
 
 // Rutas para la gestión de productos
 const productsRouter = express.Router();
@@ -116,5 +126,15 @@ app.get('/products/:pid', (req, res) => {
     }
 });
 
+app.get('/realtimeproducts', (req, res) => {
+    const products = getProductList(); // Asegúrate de obtener la lista de productos de tu lógica
+    res.render('realTimeProducts', { products });
+});
+
 
 app.listen(8080, () => console.log('Servidor en 8080'));
+
+function getProductList() {
+    const productManager = new ProductManager("products.json");
+    return productManager.getProducts();
+}
