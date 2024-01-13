@@ -44,7 +44,7 @@ class ProductManager {
       return null;
     }
 
-    // Crear un nuevo producto con id autoincrementable
+
     const newProduct = {
       id: this.nextProductId++,
       title,
@@ -56,7 +56,7 @@ class ProductManager {
     };
 
     this.products.push(newProduct);
-    this.saveProducts(); // Mover esta línea para que guarde después de agregar el nuevo producto
+    this.saveProducts(); 
     return newProduct;
   }
 
@@ -65,7 +65,7 @@ class ProductManager {
 
     if (productIndex !== -1) {
       this.products[productIndex] = { ...this.products[productIndex], ...updatedFields };
-      this.saveProducts(); // Guardar productos después de actualizar
+      this.saveProducts(); // Guardar 
       return this.products[productIndex];
     } else {
       console.error(`Producto con ID "${productId}" no encontrado.`);
@@ -78,7 +78,7 @@ class ProductManager {
 
     if (productIndex !== -1) {
       this.products.splice(productIndex, 1);
-      this.saveProducts(); // Guardar productos después de eliminar
+      this.saveProducts(); // Guardar 
       console.log(`Producto con ID "${productId}" eliminado correctamente.`);
     } else {
       console.error(`Producto con ID "${productId}" no encontrado. No se pudo eliminar.`);
@@ -101,28 +101,28 @@ class ProductManager {
   }
 }
 
-// Ejemplo de uso:
+// Ejemplo
 const myProductManager = new ProductManager("products.json");
 
-// Agregar productos con códigos únicos
+// Agregar productos
 const product1 = myProductManager.addProduct("Producto 1", "Descripción del producto 1", 29.99, "/images/product1.jpg", "P001", 100);
 const product2 = myProductManager.addProduct("Producto 2", "Descripción del producto 2", 39.99, "/images/product2.jpg", "P002", 50);
 
-// Intentar agregar un producto con código repetido (debería fallar)
+//  agregar un producto con código repetido
 const product3 = myProductManager.addProduct("Producto 3", "Descripción del producto 3", 19.99, "/images/product3.jpg", "P001", 75);
 
-// Eliminar un producto por ID
+// Eliminar 
 myProductManager.deleteProduct(1);
 
-// Obtener todos los productos después de eliminar
+
 const allProductsAfterDelete = myProductManager.getProducts();
 console.log(allProductsAfterDelete);
 
-// Obtener un producto por ID
+// Obtener un producto
 const productById = myProductManager.getProductById(1);
 console.log(productById);
 
-// Intentar obtener un producto con un ID inexistente
+// ID inexistente
 const nonExistingProduct = myProductManager.getProductById(3);
 
 // Obtener todos los productos

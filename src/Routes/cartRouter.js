@@ -1,23 +1,23 @@
-// En cartRouter.js (ubicado en la carpeta routes)
+
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
-// Array para almacenar los carritos (puedes utilizar una base de datos en lugar de un array en un entorno de producción)
+// Array para almacenar los carritos
 const carts = [];
 
-// Ruta POST para crear un nuevo carrito
+// Ruta POST 
 router.post('/', (req, res) => {
-    // Genera un id único para el nuevo carrito
+    
     const cartId = uuidv4();
 
-    // Crea un nuevo carrito con la estructura requerida
+    
     const newCart = {
         id: cartId,
         products: [],
     };
 
-    // Agrega el nuevo carrito al array de carritos
+    
     carts.push(newCart);
 
     // Devuelve el carrito recién creado
@@ -51,14 +51,14 @@ router.post('/:cid/product/:pid', (req, res) => {
       return res.status(404).json({ error: 'Carrito no encontrado.' });
     }
   
-    // Verificar si el producto ya existe en el carrito
+    // Verificar si el producto ya existe
     const existingProduct = cart.products.find(product => product.product === productId);
   
     if (existingProduct) {
-      // Incrementar la cantidad si el producto ya está en el carrito
+      // Incrementar la cantidad
       existingProduct.quantity += quantity || 1;
     } else {
-      // Agregar el producto al carrito como un nuevo objeto
+      // Agregar el producto al carrito 
       cart.products.push({ product: productId, quantity: quantity || 1 });
     }
   

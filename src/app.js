@@ -1,6 +1,6 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
-const bodyParser = require('body-parser'); // Middleware para procesar JSON en las solicitudes
+const bodyParser = require('body-parser'); // Middleware 
 const ProductManager = require('./ProductManager');
 const productRouter = require('./Routes/productRouter'); 
 const cartRouter = require('./Routes/cartRouter'); 
@@ -17,7 +17,7 @@ const server = http.createServer(app);
 const io = socketIO(server);
 
 app.engine('handlebars', exphbs.engine({
-    defaultLayout: false // Desactiva el uso de layouts por defecto
+    defaultLayout: false // Desactiva  layouts 
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'));
@@ -26,18 +26,18 @@ app.set('views', path.join(__dirname, 'views'));
 io.on('connection', (socket) => {
     console.log('Usuario conectado');
     
-    // Manejar eventos de WebSocket aquí
+    
 });
 
-// Después de agregar o eliminar un producto
+
 io.emit('updateProducts', getProductList());
 
 
 
-// Middleware para procesar JSON en las solicitudes
+
 app.use(bodyParser.json());
 
-// Crea una instancia única de ProductManager al inicio de la aplicación
+// Crea una instancia
 const productManager = new ProductManager("products.json");
 
 const socketServer = { io };
@@ -46,22 +46,22 @@ app.set('socketServer', socketServer);
 
 module.exports = { socketServer };
 
-// Rutas para la gestión de productos
+// Rutas 
 const productsRouter = express.Router();
 
-// Ruta POST para agregar un nuevo producto
+// Ruta POST 
 productsRouter.post('/', (req, res) => {
     const { title, description, code, price, stock, category, thumbnails } = req.body;
 
-    // Validación de campos obligatorios
+    // Validación 
     if (!title || !description || !code || !price || !stock || !category) {
         return res.status(400).json({ error: 'Todos los campos son obligatorios, excepto thumbnails.' });
     }
 
-    // Genera un id único para el nuevo producto
+    // Genera un id único 
     const productId = uuidv4();
 
-    // Crea el nuevo producto
+    // Crea 
     const newProduct = {
         id: productId,
         title,
@@ -74,10 +74,10 @@ productsRouter.post('/', (req, res) => {
         thumbnails: thumbnails || [], // Si no se proporciona thumbnails, se establece como un array vacío
     };
 
-    // Agrega el nuevo producto al ProductManager
+    // Agrega el nuevo producto 
     const addedProduct = productManager.addProduct(newProduct);
 
-    // Devuelve el producto recién agregado
+    // Devuelve el producto 
     if (addedProduct) {
         res.status(201).json(addedProduct);
     } else {
@@ -85,7 +85,7 @@ productsRouter.post('/', (req, res) => {
     }
 });
 
-// Agrega el router de productos a /api/products
+// Agrega el router 
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 
@@ -113,10 +113,10 @@ app.get('/products', (req, res) => {
 app.get('/products/:pid', (req, res) => {
     const productId = parseInt(req.params.pid);
 
-    // Crea una instancia de ProductManager con la ruta correcta
+    // Crea una instancia 
     const productManager = new ProductManager("products.json");
 
-    // Obtén el producto por ID
+    // Obtén el producto
     const producto = productManager.getProductById(productId);
 
     if (producto) {
@@ -127,7 +127,7 @@ app.get('/products/:pid', (req, res) => {
 });
 
 app.get('/realtimeproducts', (req, res) => {
-    const products = getProductList(); // Asegúrate de obtener la lista de productos de tu lógica
+    const products = getProductList(); 
     res.render('realTimeProducts', { products });
 });
 

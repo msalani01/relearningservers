@@ -5,40 +5,40 @@ const ProductManager = require('../ProductManager');
 const productsRouter = express.Router();
 const productManager = new ProductManager("products.json");
 
-// Ruta para crear un nuevo producto
+// Ruta 
 productsRouter.post('/', (req, res) => {
     const { title, description, code, price, stock, category, thumbnails } = req.body;
 
-    // Validación de campos obligatorios
+    // Validación
     if (!title || !description || !code || !price || !stock || !category) {
         return res.status(400).json({ error: 'Todos los campos son obligatorios, excepto thumbnails.' });
     }
 
-    // Genera un id único para el nuevo producto
+    // Genera un id 
     const productId = uuidv4();
 
-    // Crea el nuevo producto
+    // Crea producto
     const newProduct = {
         id: productId,
         title,
         description,
         code,
         price,
-        status: true, // Status por defecto es true
+        status: true, 
         stock,
         category,
-        thumbnails: thumbnails || [], // Si no se proporciona thumbnails, se establece como un array vacío
+        thumbnails: thumbnails || [], 
     };
 
     const socketServer = req.app.get('socketServer');
 
-    // Agrega el nuevo producto al ProductManager
+    // Agrega el nuevo producto 
     const addedProduct = productManager.addProduct(newProduct);
 
     socketServer.io.emit('updateProducts', productManager.getProducts());
 
 
-    // Devuelve el producto recién agregado
+    // Devuelve el producto
     if (addedProduct) {
         res.status(201).json(addedProduct);
     } else {
@@ -46,7 +46,7 @@ productsRouter.post('/', (req, res) => {
     }
 });
 
-// Ruta para obtener todos los productos
+// Ruta obtener  productos
 productsRouter.get('/', (req, res) => {
     const limit = req.query.limit ? parseInt(req.query.limit) : undefined;
     const products = limit ? productManager.getProducts().slice(0, limit) : productManager.getProducts();
@@ -65,7 +65,7 @@ productsRouter.get('/:productId', (req, res) => {
     }
 });
 
-// Ruta para actualizar un producto existente
+// Ruta para actualizar un producto
 productsRouter.put('/:productId', (req, res) => {
     const productId = req.params.productId;
     const updatedFields = req.body;
@@ -80,7 +80,7 @@ productsRouter.put('/:productId', (req, res) => {
     }
 });
 
-// Ruta para eliminar un producto
+// Ruta para eliminar
 productsRouter.delete('/:productId', (req, res) => {
     const productId = req.params.productId;
     const deletedProduct = productManager.deleteProduct(productId);
