@@ -1,13 +1,19 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const bodyParser = require('body-parser'); // Middleware 
-const ProductManager = require('./ProductManager');
+const ProductManager = require('../dao/ProductManager');
 const productRouter = require('./Routes/productRouter'); 
 const cartRouter = require('./Routes/cartRouter'); 
 const exphbs = require('express-handlebars');
 const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
+const { default: mongoose } = require('mongoose');
+const usersrouter = require('./Routes/usersrouter')
+
+const Cart = require('../dao/models/cart.model');
+const Message = require('../dao/models/message.model');
+const Product = require('../dao/models/product.model');
 
 
 
@@ -138,3 +144,18 @@ function getProductList() {
     const productManager = new ProductManager("products.json");
     return productManager.getProducts();
 }
+
+mongoose.connect('mongodb+srv://Marco:XiS9XLbC3V3SMZd7@cluster0.tam29xj.mongodb.net/')
+    .then(() => {
+        console.log('Connected to MongoDB');
+    })
+    .catch((error) => {
+        console.log('Error connecting to MongoDB:', error);
+        process.exit();
+    });
+
+
+
+
+
+app.use('/api/users',usersrouter);

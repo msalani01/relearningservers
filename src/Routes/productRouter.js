@@ -1,6 +1,6 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
-const ProductManager = require('../ProductManager');
+const ProductManager = require('../../dao/ProductManager');
 
 const productsRouter = express.Router();
 const productManager = new ProductManager("products.json");
