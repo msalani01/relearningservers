@@ -1,0 +1,49 @@
+<!-- chat.handlebars -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <h1>Chat</h1>
+    
+    <div id="messages">
+        {{#each messages}}
+            <p><strong>{{user}}:</strong> {{message}}</p>
+        {{/each}}
+    </div>
+
+    <form id="chatForm">
+        <input type="text" id="messageInput" placeholder="Type your message">
+        <button type="submit">Send</button>
+    </form>
+
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+
+        document.getElementById('chatForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+
+            if (message !== '') {
+                // Emitir evento de chat al servidor
+                socket.emit('chatMessage', { user: 'correoDelUsuario', message });
+                messageInput.value = '';
+            }
+        });
+
+        // Escuchar eventos de chat desde el servidor
+        socket.on('chatMessage', (data) => {
+            const messagesDiv = document.getElementById('messages');
+            const messageParagraph = document.createElement('p');
+            messageParagraph.innerHTML = `<strong>${data.user}:</strong> ${data.message}`;
+            messagesDiv.appendChild(messageParagraph);
+        });
+    </script>
+</body>
+</html>

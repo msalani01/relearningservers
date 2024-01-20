@@ -116,6 +116,13 @@ app.get('/products', (req, res) => {
     res.json(products);
 });
 
+app.get('/chat', async (req, res) => {
+    // Obtener todos los mensajes de la base de datos
+    const messages = await Message.find().sort({ createdAt: 'asc' });
+
+    res.render('chat', { messages });
+});
+
 app.get('/products/:pid', (req, res) => {
     const productId = parseInt(req.params.pid);
 
